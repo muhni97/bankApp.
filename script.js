@@ -1,14 +1,5 @@
 'use strict';
 
-/////////////////////////////////////////////////
-/////////////////////////////////////////////////
-// BANKIST APP
-
-/////////////////////////////////////////////////
-// Data
-
-// DIFFERENT DATA! Contains movement dates, currency and locale
-
 const account1 = {
   owner: 'Courtney Brakus',
   movements: [200, 455.23, -306.5, 25000, -642.21, -133.9, 79.97, 1300],
@@ -125,17 +116,10 @@ const formatMovementDate = function (date, locale) {
 
   const calcDaysPassed = (date1, date2) => Math.round(Math.abs(date2 - date1) / (1000 * 60 * 60 * 24))
   const daysPassed = calcDaysPassed(new Date(), date)
-  //console.log(daysPassed)
 
   if (daysPassed === 0) return 'Today';
   if (daysPassed === 1) return 'Yesterday';
   if (daysPassed <= 7) return `${daysPassed} days ago`
-  // else {
-  //   const day = `${date.getDate()}`.padStart(2, 0)
-  //   const month = `${date.getMonth() + 1}`.padStart(2, 0)
-  //   const year = date.getFullYear()
-  //   return `${day}/${month}/${year}`
-  // }
 
   return new Intl.DateTimeFormat(locale).format(date)
 }
@@ -196,7 +180,6 @@ const calcDisplaySummary = function (acc) {
     .filter(mov => mov > 0)
     .map(deposit => (deposit * acc.interestRate) / 100)
     .filter((int, i, arr) => {
-      // console.log(arr);
       return int >= 1;
     })
     .reduce((acc, int) => acc + int, 0);
@@ -227,6 +210,9 @@ const updateUI = function (acc) {
 
 const startLogOutTimer = function(){
 
+ // Set time to 2 minutes
+ let time = 120
+
   const tick = () => {
 
     const min = String(Math.trunc(time / 60)).padStart(2, 0)
@@ -248,9 +234,6 @@ const startLogOutTimer = function(){
       time--
   }
 
-  // Set time to 5 minutes
-  let time = 120
-
   // Call the timer every second
   tick()
   const timer = setInterval(tick, 1000);
@@ -268,7 +251,6 @@ btnLogin.addEventListener('click', function (e) {
   currentAccount = accounts.find(
     acc => acc.username === inputLoginUsername.value
   );
-  console.log(currentAccount);
 
   if (currentAccount?.pin === +(inputLoginPin.value)) {
     // Display UI and message
@@ -293,14 +275,6 @@ btnLogin.addEventListener('click', function (e) {
       currentAccount.locale,
       options
     ).format(now)
-
-    // const now = new Date()
-    // const day = `${now.getDate()}`.padStart(2, 0)
-    // const month = `${now.getMonth() + 1}`.padStart(2, 0)
-    // const year = now.getFullYear()
-    // const hour = `${now.getHours()}`.padStart(2, 0)
-    // const minutes = `${now.getMinutes()}`.padStart(2, 0)
-    // labelDate.textContent = `${day}/${month}/${year}, ${hour}:${minutes}`
 
     // Clear input fields
     inputLoginUsername.value = inputLoginPin.value = '';
@@ -382,8 +356,6 @@ btnClose.addEventListener('click', function (e) {
     const index = accounts.findIndex(
       acc => acc.username === currentAccount.username
     );
-    //console.log(index);
-    // .indexOf(23)
 
     // Delete account
     accounts.splice(index, 1);
